@@ -6,7 +6,6 @@ import cn.nukkit.block.Block;
 import cn.nukkit.blockentity.BlockEntityItemFrame;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.ItemFrameDropItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
@@ -115,7 +114,6 @@ public class Display implements Listener {
                 @Override
                 public void changed(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State t1) {
                     if (t1 == Worker.State.SUCCEEDED) {
-                        Server.getInstance().getLogger().info("Work end.");
                         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(view.snapshot(null, null), null);
                         setImage(bufferedImage);
                     }
@@ -176,6 +174,15 @@ public class Display implements Listener {
                 count++;
 
                 e.getPlayer().sendMessage("Display: " + count);
+
+                if (count == WIDTH * HEIGHT) {
+                    isSet = true;
+                    DisplaySaver.save();
+
+                    e.getPlayer().sendMessage("Display set ok.");
+                    load(ConfigManager.loadURL);
+                    start();
+                }
             }
 
             if (started) {
@@ -186,15 +193,6 @@ public class Display implements Listener {
                     e.setCancelled();
                 }
             }
-        }
-
-        if (count == WIDTH * HEIGHT) {
-            isSet = true;
-            DisplaySaver.save();
-
-            e.getPlayer().sendMessage("Display set ok.");
-            load(ConfigManager.loadURL);
-            start();
         }
 
     }

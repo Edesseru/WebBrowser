@@ -48,13 +48,12 @@ public class Main extends PluginBase implements Listener {
 
                 switch (args[0]) {
                     case "load": {
-                        display.load(args[0]);
+                        display.load(args[1]);
                         return true;
                     }
 
                     case "create": {
                         player.sendMessage("Create display mode");
-
                         display.create(player);
                         return true;
                     }
